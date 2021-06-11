@@ -19,7 +19,7 @@ defmodule GithubEvents.SyncClient do
 
   @impl true
   def handle_continue(:publish, response) do
-    PubSub.broadcast(GithubEvents.PubSub, "PR_events", response.body)
+    PubSub.broadcast(GithubEvents.PubSub, "PR_events", {:pull_request_events, response.body})
     {:stop, :normal, []}
   end
 end
