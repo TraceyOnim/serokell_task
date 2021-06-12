@@ -19,6 +19,7 @@ defmodule GithubEventsWeb.Router do
 
     live "/", PageLive, :index
     live "/github_events", EventLive
+    live "/profile", ProfileLive
   end
 
   # Other scopes may use custom stacks.
