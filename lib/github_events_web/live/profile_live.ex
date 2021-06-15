@@ -18,8 +18,10 @@ defmodule GithubEventsWeb.ProfileLive do
         />
     </form>
     <%= if @confirm do %>
-    <img src=<%= @github_user[:avatar] %> alt="github user"/>
-    Name: <%= @github_user[:name] || "Anonymous" %>
+    <figure>
+      <img src=<%= @github_user[:avatar] %> alt="github user"  height="75" />
+      <figcaption><%= @github_user[:name] || "Anonymous" %></figcaption>
+    </figure>
 
     <button phx-click="save">Save</button>
     <% end %>
