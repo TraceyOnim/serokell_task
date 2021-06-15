@@ -12,4 +12,18 @@ defmodule GithubEvents.AccountTest do
 
     {:ok, %User{owner: "Tracey Onim"}} = Account.create_user(valid_attr)
   end
+
+  test "list_users/0 list all users from database" do
+    for name <- ["Tracey Onim", "Tee Pendo", "Lecious Pendo"] do
+      valid_attr = %{
+        owner: name,
+        repo: ["#{name}/040-simple-search-with-phoenix"],
+        avatar: "avatar.png"
+      }
+
+      Account.create_user(valid_attr)
+    end
+
+    assert Account.list_users() |> Enum.count() == 3
+  end
 end
