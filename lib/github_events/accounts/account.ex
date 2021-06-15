@@ -17,6 +17,15 @@ defmodule GithubEvents.Account do
     |> Repo.insert()
   end
 
+  @doc """
+  list all users saved in the database
+  """
+
+  @spec list_users() :: [User.t(), ...]
+  def list_users do
+    Repo.all(User)
+  end
+
   @spec change_user(map()) :: Ecto.Changeset.t()
   def change_user(attr) do
     %User{}

@@ -6,25 +6,45 @@ defmodule GithubEventsWeb.ProfileLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, socket |> assign(confirm: false, github_user: %{})}
+    {:ok, socket |> assign(confirm: false, github_user: %{}, mapped_users: Account.list_users())}
   end
 
   @impl true
   def render(assigns) do
     ~L"""
-    <form phx-change="confirm">
+    <div class="container">
+    <div class="row">
+    <div class="column column-50">
+       <form phx-change="confirm">
       <label for="">Enter Github User</label>
         <input type="text" name="user" id="user"
         />
     </form>
+    <div class="row">
+    <div class="column">
     <%= if @confirm do %>
     <figure>
       <img src=<%= @github_user[:avatar] %> alt="github user"  height="75" />
       <figcaption><%= @github_user[:name] || "Anonymous" %></figcaption>
     </figure>
-
     <button phx-click="save">Save</button>
     <% end %>
+    </div>
+    </div>
+    </div>
+    <div class="column column-offset-15">
+    <table>
+    <%= for user <- @mapped_users do %>
+    <tr>
+    <td><%= user.owner %></td>
+    <td><%= live_redirect "Events", to: Routes.live_path(@socket, GithubEventsWeb.EventLive, name: "#{user.owner}") %></td>
+     </tr>
+    <% end %>
+    <table>
+    </div>
+    </div>
+    </div>
+
     """
   end
 
