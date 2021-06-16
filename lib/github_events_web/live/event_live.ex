@@ -52,7 +52,7 @@ defmodule GithubEventsWeb.EventLive do
 
   @impl true
   def handle_params(%{"owner" => owner}, url, socket) do
-    {:noreply, socket |> assign(repos: user_repos(owner))}
+    {:noreply, socket |> assign(repos: Account.user_repos(owner))}
   end
 
   @impl true
@@ -63,10 +63,5 @@ defmodule GithubEventsWeb.EventLive do
   @impl true
   def handle_info({:pull_request_events, payloads}, socket) do
     {:noreply, socket |> assign(payloads: Jason.decode!(payloads))}
-  end
-
-  defp user_repos(owner) do
-    user = Account.get_user(owner)
-    user.repo
   end
 end

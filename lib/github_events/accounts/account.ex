@@ -34,6 +34,17 @@ defmodule GithubEvents.Account do
     Repo.get_by(User, owner: owner)
   end
 
+  @doc """
+  returns user repos
+  """
+  @spec user_repos(String.t()) :: [String.t(), ...] | []
+  def user_repos(owner) do
+    case get_user(owner) do
+      nil -> []
+      user -> user.repo
+    end
+  end
+
   @spec change_user(map()) :: Ecto.Changeset.t()
   def change_user(attr) do
     %User{}
