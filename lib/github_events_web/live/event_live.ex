@@ -1,18 +1,27 @@
 defmodule GithubEventsWeb.EventLive do
   use GithubEventsWeb, :live_view
 
+  alias GithubEvents.Account
   alias Phoenix.PubSub
 
   @impl true
   def mount(_params, _session, socket) do
     PubSub.subscribe(GithubEvents.PubSub, "PR_events")
-    {:ok, socket |> assign(payloads: [])}
+    {:ok, socket |> assign(payloads: [], repos: [])}
   end
 
   @impl true
   def render(assigns) do
     ~L"""
       <div class="container">
+      <form phx-change="sync">
+      <select name="repo">
+        <option value="all" selected>All</option>
+        <%= for repo <- @repos do %>
+        <option value="<%= repo %>"><%= repo %></option>
+        <% end %>
+      </select>
+      </form>
       <h1>Github Pull Request Events </h1>
       <table>
       <tr>
@@ -41,6 +50,22 @@ defmodule GithubEventsWeb.EventLive do
       </table>
       </div>
     """
+  end
+
+  @impl true
+  def handle_params(%{"owner" => owner}, url, socket) do
+    {:noreply, socket |> assign(repos: Account.user_repos(owner))}
+  end
+
+  @impl true
+  def handle_params(_params, _url, socket) do
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("sync", %{"repo" => repo}, socket) do
+    GithubEvents.SyncClient.start_link(repo)
+    {:noreply, socket}
   end
 
   @impl true

@@ -37,7 +37,7 @@ defmodule GithubEventsWeb.ProfileLive do
     <%= for user <- @mapped_users do %>
     <tr>
     <td><%= user.owner %></td>
-    <td><%= live_redirect "Events", to: Routes.live_path(@socket, GithubEventsWeb.EventLive, name: "#{user.owner}") %></td>
+    <td><%= live_redirect "Events", to: Routes.live_path(@socket, GithubEventsWeb.EventLive, owner: "#{user.owner}") %></td>
      </tr>
     <% end %>
     <table>
