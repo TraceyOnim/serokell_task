@@ -58,7 +58,7 @@ defmodule GithubEventsWeb.EventLive do
     <%= for contributor <- @contributors do %>
     <tr>
     <td><%= contributor %></td>
-    <td><%= live_patch "Events", to: Routes.live_path(@socket, GithubEventsWeb.EventLive, owner: "#{contributor}") %></td>
+    <td><%= live_patch "Events", to: Routes.live_path(@socket, GithubEventsWeb.EventLive, remapped_user: "#{contributor}") %></td>
      </tr>
     <% end %>
     <table>
@@ -74,6 +74,11 @@ defmodule GithubEventsWeb.EventLive do
   end
 
   @impl true
+  def handle_params(%{"remapped_user" => remapped_user}, url, socket) do
+    {:noreply, socket |> _remapped_user_repos(remapped_user)}
+  end
+
+  @impl true
   def handle_params(_params, _url, socket) do
     {:noreply, socket}
   end
@@ -82,7 +87,7 @@ defmodule GithubEventsWeb.EventLive do
   def handle_event("sync", %{"repo" => repo}, socket) do
     GithubEvents.SyncClient.start_link(repo)
 
-    {:noreply, socket |> repo_contributors(repo) |> _remapped_user_repos(repo)}
+    {:noreply, socket |> repo_contributors(repo)}
   end
 
   @impl true
@@ -107,16 +112,7 @@ defmodule GithubEventsWeb.EventLive do
     end
   end
 
-  defp _remapped_user_repos(socket, repo) do
-    repos =
-      Enum.map(repo_contributors(repo), fn contributor ->
-        profile = Util.github_user_profile!(contributor)
-
-        contributor
-        |> Util.fetch_repos!()
-        |> Util.parse_repos()
-      end)
-
-    assign(socket, repos: repos)
+  defp _remapped_user_repos(socket, remapped_user) do
+    assign(socket, repos: remapped_user |> Util.fetch_repos!() |> Util.parse_repos())
   end
 end
