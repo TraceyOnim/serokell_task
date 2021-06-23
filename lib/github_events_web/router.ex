@@ -17,9 +17,18 @@ defmodule GithubEventsWeb.Router do
   scope "/", GithubEventsWeb do
     pipe_through :browser
 
-    live "/", PageLive, :index
+    get "/", PageController, :index
     live "/github_events", EventLive
     live "/profile", ProfileLive
+  end
+
+  scope "/auth", GithubEventsWeb do
+    pipe_through :browser
+
+    get "/:provider", AuthController, :request
+    get "/:provider/callback", AuthController, :callback
+    post "/:provider/callback", AuthController, :callback
+    delete "/logout", AuthController, :delete
   end
 
   # Other scopes may use custom stacks.

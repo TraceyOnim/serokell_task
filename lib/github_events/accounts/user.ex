@@ -5,6 +5,7 @@ defmodule GithubEvents.Accounts.User do
   @type t :: %__MODULE__{}
 
   schema "users" do
+    field :uid, :integer
     field :owner, :string
     field :repo, {:array, :string}
     field :avatar, :string
@@ -12,6 +13,6 @@ defmodule GithubEvents.Accounts.User do
 
   def changeset(user, attr \\ %{}) do
     user
-    |> cast(attr, [:owner, :repo, :avatar])
+    |> cast(attr, [:owner, :repo, :avatar, :uid])
   end
 end
