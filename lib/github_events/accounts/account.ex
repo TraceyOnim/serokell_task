@@ -6,6 +6,8 @@ defmodule GithubEvents.Account do
   alias GithubEvents.Accounts.User
   alias GithubEvents.Repo
 
+  alias Ueberauth.Auth
+
   @doc """
   saves user into the database
   """
@@ -49,5 +51,43 @@ defmodule GithubEvents.Account do
   def change_user(attr) do
     %User{}
     |> User.changeset(attr)
+  end
+
+  def find_or_create(%Auth{} = auth) do
+    case get_user(auth.info.name) do
+      nil ->
+        create_user(basic_info(auth))
+
+      user ->
+        {:ok, user}
+    end
+  end
+
+  # github does it this way
+  defp avatar_from_auth(%{info: %{urls: %{avatar_url: image}}}), do: image
+
+  # default case if nothing matches
+  defp avatar_from_auth(auth) do
+    nil
+  end
+
+  defp basic_info(auth) do
+    %{owner: name_from_auth(auth), avatar: avatar_from_auth(auth)}
+  end
+
+  defp name_from_auth(auth) do
+    if auth.info.name do
+      auth.info.name
+    else
+      name =
+        [auth.info.first_name, auth.info.last_name]
+        |> Enum.filter(&(&1 != nil and &1 != ""))
+
+      if Enum.empty?(name) do
+        auth.info.nickname
+      else
+        Enum.join(name, " ")
+      end
+    end
   end
 end

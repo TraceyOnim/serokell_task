@@ -7,6 +7,7 @@ defmodule GithubEventsWeb.Router do
     plug :fetch_live_flash
     plug :put_root_layout, {GithubEventsWeb.LayoutView, :root}
     plug :protect_from_forgery
+    plug GithubEventsWeb.Auth
     plug :put_secure_browser_headers
   end
 
@@ -14,12 +15,27 @@ defmodule GithubEventsWeb.Router do
     plug :accepts, ["json"]
   end
 
+  pipeline :authorize do
+    plug GithubEventsWeb.Authorize
+  end
+
   scope "/", GithubEventsWeb do
     pipe_through :browser
 
-    live "/", PageLive, :index
+    get "/", PageController, :index
+
+    pipe_through :authorize
     live "/github_events", EventLive
     live "/profile", ProfileLive
+  end
+
+  scope "/auth", GithubEventsWeb do
+    pipe_through :browser
+
+    get "/:provider", AuthController, :request
+    get "/:provider/callback", AuthController, :callback
+    post "/:provider/callback", AuthController, :callback
+    delete "/logout", AuthController, :delete
   end
 
   # Other scopes may use custom stacks.

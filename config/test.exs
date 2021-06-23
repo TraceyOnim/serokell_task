@@ -18,5 +18,14 @@ config :github_events, GithubEventsWeb.Endpoint,
   http: [port: 4002],
   server: false
 
+config :ueberauth, Ueberauth,
+  providers: [
+    github: {Ueberauth.Strategy.Github, [default_scope: "user:email", allow_private_emails: true]}
+  ]
+
+config :ueberauth, Ueberauth.Strategy.Github.OAuth,
+  client_id: "531d1372b526a64f8y91",
+  client_secret: "59f84e63b005a523ae64cc52a2ff36b61cgg5cn9"
+
 # Print only warnings and errors during test
 config :logger, level: :warn

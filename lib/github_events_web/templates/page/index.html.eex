@@ -1,0 +1,21 @@
+<section class="phx-hero">
+  <h1>Login to proceed</h1>
+  <%= if @current_user do %>
+    <h2>Welcome, <%= @current_user.owner %>!</h2>
+    <div>
+      <img src="<%= @current_user.avatar %>" />
+    </div>
+    <%= link "Logout", to: Routes.auth_path(@conn, :delete), method: "delete", class: "button" %>
+    <%= link "Profile", to: Routes.live_path(GithubEventsWeb.Endpoint, GithubEventsWeb.ProfileLive), class: "button" %>
+    <br>
+  <% else %>
+    <ul style="list-style: none">
+      <li>
+        <a class="button" href="<%= Routes.auth_path(@conn, :request, "github") %>">
+          <i class="fa fa-github"></i>
+          Sign in with GitHub
+        </a>
+      </li>
+    </ul>
+  <% end %>
+</section>
