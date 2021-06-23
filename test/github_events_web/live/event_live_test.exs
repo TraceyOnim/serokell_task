@@ -23,12 +23,26 @@ defmodule GithubEventsWeb.EventLiveTest do
     assert html =~ "<option value=\"TraceyOnim/040-simple-search-with-phoenix\">"
   end
 
-  # describe "GITHUG PULL REQUEST EVENTS:" do
-  #   test "are displayed for a given specified repo", %{conn: conn} do
-  #     GithubEvents.SyncClient.start_link("beamkenya/ex_pesa") |> IO.inspect()
-  #     Process.sleep(20000)
-  #     {:ok, _view, html} = live(conn, "/github_events")
-  #     IO.inspect(html)
-  #   end
-  # end
+  test "application user can remap to github user to another github user in the repo", %{
+    conn: conn
+  } do
+    valid_attr = %{
+      owner: "Beam Kenya",
+      repo: ["beamkenya/ex_pesa"],
+      avatar: "avatar.png"
+    }
+
+    Account.create_user(valid_attr)
+
+    {:ok, view, _html} = live(conn, "/github_events?owner=BEAM+Kenya")
+
+    html = render_change(view, "sync", %{"repo" => "beamkenya/ex_pesa"})
+
+    # one of the contributor in the repo
+    assert html =~ "<td>Tracey Onim</td>"
+
+    html = render_patch(view, "/github_events?remapped_user=TraceyOnim")
+    # assert user can see remapped user repos
+    assert html =~ "<option value=\"TraceyOnim/040-simple-search-with-phoenix\">"
+  end
 end

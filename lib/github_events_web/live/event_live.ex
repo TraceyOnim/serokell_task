@@ -75,7 +75,7 @@ defmodule GithubEventsWeb.EventLive do
 
   @impl true
   def handle_params(%{"remapped_user" => remapped_user}, url, socket) do
-    {:noreply, socket |> _remapped_user_repos(remapped_user)}
+    {:noreply, socket |> assign(payloads: []) |> _remapped_user_repos(remapped_user)}
   end
 
   @impl true
