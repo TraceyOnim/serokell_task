@@ -29,8 +29,8 @@ config :ueberauth, Ueberauth,
   ]
 
 config :ueberauth, Ueberauth.Strategy.Github.OAuth,
-  client_id: "531d1372b526a64f88a1",
-  client_secret: "59f84e63b005a523ae64cc52a2ff36b61cbb5cb9"
+  client_id: "",
+  client_secret: ""
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
