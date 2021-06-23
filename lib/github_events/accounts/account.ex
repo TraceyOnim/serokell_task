@@ -17,7 +17,6 @@ defmodule GithubEvents.Account do
     attr
     |> change_user()
     |> Repo.insert()
-    |> IO.inspect(label: "========================")
   end
 
   @doc """
@@ -38,14 +37,6 @@ defmodule GithubEvents.Account do
   end
 
   @doc """
-  fetch user whose uid matches
-  """
-
-  def get_by_id(id) do
-    Repo.get(User, id)
-  end
-
-  @doc """
   returns user repos
   """
   @spec user_repos(String.t()) :: [String.t(), ...] | []
@@ -63,7 +54,7 @@ defmodule GithubEvents.Account do
   end
 
   def find_or_create(%Auth{} = auth) do
-    case get_by_id(auth.uid) do
+    case get_user(auth.info.name) do
       nil ->
         create_user(basic_info(auth))
 
@@ -81,7 +72,7 @@ defmodule GithubEvents.Account do
   end
 
   defp basic_info(auth) do
-    %{uid: auth.uid, owner: name_from_auth(auth), avatar: avatar_from_auth(auth)}
+    %{owner: name_from_auth(auth), avatar: avatar_from_auth(auth)}
   end
 
   defp name_from_auth(auth) do

@@ -6,6 +6,7 @@
       <img src="<%= @current_user.avatar %>" />
     </div>
     <%= link "Logout", to: Routes.auth_path(@conn, :delete), method: "delete", class: "button" %>
+    <%= link "Profile", to: Routes.live_path(GithubEventsWeb.Endpoint, GithubEventsWeb.ProfileLive), class: "button" %>
     <br>
   <% else %>
     <ul style="list-style: none">

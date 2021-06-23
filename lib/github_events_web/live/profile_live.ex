@@ -14,6 +14,7 @@ defmodule GithubEventsWeb.ProfileLive do
   def render(assigns) do
     ~L"""
     <div class="container">
+    <h1>Map to Github Users</h1>
     <div class="row">
     <div class="column column-50">
        <form phx-change="confirm">

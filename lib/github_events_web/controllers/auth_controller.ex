@@ -27,8 +27,6 @@ defmodule GithubEventsWeb.AuthController do
   end
 
   def callback(%{assigns: %{ueberauth_auth: auth}} = conn, _params) do
-    IO.inspect(auth, label: "================================")
-
     case Account.find_or_create(auth) do
       {:ok, user} ->
         conn
