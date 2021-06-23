@@ -52,8 +52,8 @@ defmodule GithubEventsWeb.EventLive do
       
       </table>
       </div>
-      <div class="column column-offset-15">
-      <h4>Repo contributors</h4>
+      <div class="column column-offset-25">
+      <h4>contributors</h4>
       <table>
     <%= for {owner, name} <- @contributors do %>
     <tr>
