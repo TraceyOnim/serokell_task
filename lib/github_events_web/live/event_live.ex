@@ -55,10 +55,10 @@ defmodule GithubEventsWeb.EventLive do
       <div class="column column-offset-15">
       <h4>Repo contributors</h4>
       <table>
-    <%= for contributor <- @contributors do %>
+    <%= for {owner, name} <- @contributors do %>
     <tr>
-    <td><%= contributor %></td>
-    <td><%= live_patch "Events", to: Routes.live_path(@socket, GithubEventsWeb.EventLive, remapped_user: "#{contributor}") %></td>
+    <td><%= name %></td>
+    <td><%= live_patch "Events", to: Routes.live_path(@socket, GithubEventsWeb.EventLive, remapped_user: "#{owner}") %></td>
      </tr>
     <% end %>
     <table>
@@ -99,7 +99,7 @@ defmodule GithubEventsWeb.EventLive do
     contributors =
       Enum.map(repo_contributors(repo), fn contributor ->
         profile = Util.github_user_profile!(contributor)
-        profile["name"]
+        {contributor, profile["name"]}
       end)
 
     assign(socket, contributors: contributors)
